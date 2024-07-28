@@ -51,7 +51,7 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
-
+    console.log("token:",token)
     if (token) {
       localStorage.setItem('token', token);
       setAuthToken(token);
@@ -60,6 +60,7 @@ const AuthProvider = ({ children }) => {
         type: 'LOGIN_SUCCESS',
         payload: { user: decoded.user, token }
       });
+     
     } else if (state.token) {
       setAuthToken(state.token);
       const decoded = decodeJWT(state.token);
