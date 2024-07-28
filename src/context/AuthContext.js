@@ -66,7 +66,7 @@ const AuthProvider = ({ children }) => {
       });
       setTimeout(() => {
         window.location.href = '/tasks';
-      }, 100);
+      }, 1000);
     } else if (state.token) {
       setAuthToken(state.token);
       const decoded = decodeJWT(state.token);
