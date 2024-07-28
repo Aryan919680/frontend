@@ -61,7 +61,12 @@ const AuthProvider = ({ children }) => {
         type: 'LOGIN_SUCCESS',
         payload: { user: decoded.user, token }
       });
-     history('/tasks')
+      const addToken = localStorage.setItem('token', token);
+      console.log(addToken)
+      if(addToken){
+        history('/tasks')
+      }
+    
     } else if (state.token) {
       setAuthToken(state.token);
       const decoded = decodeJWT(state.token);
