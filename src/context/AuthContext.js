@@ -62,7 +62,7 @@ const AuthProvider = ({ children }) => {
       console.log('Decoded token:', decoded);
       dispatch({
         type: 'LOGIN_SUCCESS',
-        payload: { user: decoded.user, token:token, isAuthenticated:true }
+        payload: { user: decoded.user, token }
       });
       console.log('Redirecting to /tasks');
       window.location.href = '/tasks'; // Redirect to tasks after setting token
