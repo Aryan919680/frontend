@@ -12,11 +12,12 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
+          <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Register />} />
           <Route path="/tasks" element={<PrivateRoute><TaskBoard /></PrivateRoute>} />
-          <Route path="/edit/:id" element={<EditTask />} />
-          <Route path="/view/:id" element={<ViewTask />} />
+          <Route path="/edit/:id" element={<PrivateRoute><EditTask /></PrivateRoute>}  />
+          <Route path="/view/:id" element={<PrivateRoute><ViewTask /></PrivateRoute>}  />
         </Routes>
       </Router>
     </AuthProvider>
