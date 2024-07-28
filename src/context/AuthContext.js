@@ -53,28 +53,29 @@ const AuthProvider = ({ children }) => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
     console.log("token:",token)
-    if (token) {
-      localStorage.setItem('token', token);
-      setAuthToken(token);
-      const decoded = decodeJWT(token);
-      dispatch({
-        type: 'LOGIN_SUCCESS',
-        payload: { user: decoded.user, token }
-      });
-      const addToken = localStorage.setItem('token', token);
-      console.log(addToken)
-      if(addToken){
+    try {
+      if (token) {
+        localStorage.setItem('token', token);
+        setAuthToken(token);
+        const decoded = decodeJWT(token);
+        dispatch({
+          type: 'LOGIN_SUCCESS',
+          payload: { user: decoded.user, token }
+        });
+      
         history('/tasks')
+      } else if (state.token) {
+        setAuthToken(state.token);
+        const decoded = decodeJWT(state.token);
+        dispatch({
+          type: 'LOGIN_SUCCESS',
+          payload: { user: decoded.user, token: state.token }
+        });
       }
-    
-    } else if (state.token) {
-      setAuthToken(state.token);
-      const decoded = decodeJWT(state.token);
-      dispatch({
-        type: 'LOGIN_SUCCESS',
-        payload: { user: decoded.user, token: state.token }
-      });
+    } catch (error) {
+      console.log(error)
     }
+   
   }, [state.token]);
 
   const login = async (userData) => {
