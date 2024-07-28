@@ -63,7 +63,7 @@ const AuthProvider = ({ children }) => {
           payload: { user: decoded.user, token }
         });
       
-        history('/tasks')
+        // history('/tasks')
       } else if (state.token) {
         setAuthToken(state.token);
         const decoded = decodeJWT(state.token);
