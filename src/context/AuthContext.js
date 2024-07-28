@@ -89,6 +89,7 @@ const AuthProvider = ({ children }) => {
         type: 'LOGIN_SUCCESS',
         payload: { user: decoded.user, token }
       });
+      return true;
     } catch (err) {
       console.error('Register error', err.response.data);
     }
