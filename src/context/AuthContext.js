@@ -1,7 +1,7 @@
 import React, { createContext, useReducer, useEffect } from 'react';
 import api, { loginUser, registerUser } from '../utils/api';
 import setAuthToken from '../utils/setAuthToken';
-
+import { useNavigate } from 'react-router-dom';
 const initialState = {
   isAuthenticated: false,
   user: null,
@@ -47,6 +47,7 @@ const decodeJWT = (token) => {
 
 const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
+  let navigate = useNavigate();
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -60,7 +61,7 @@ const AuthProvider = ({ children }) => {
         type: 'LOGIN_SUCCESS',
         payload: { user: decoded.user, token }
       });
-     
+      navigate('/tasks')
     } else if (state.token) {
       setAuthToken(state.token);
       const decoded = decodeJWT(state.token);
