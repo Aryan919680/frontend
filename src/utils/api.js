@@ -6,6 +6,19 @@ const api = axios.create({
   baseURL: API_URL,
 });
 
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers['x-auth-token'] = token;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 export const registerUser = (userData) => api.post('/auth/register', userData);
 export const loginUser = (userData) => api.post('/auth/login', userData);
 export const getTasks = () => api.get('/tasks');
