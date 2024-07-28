@@ -75,7 +75,6 @@ const AuthProvider = ({ children }) => {
         payload: { user: decoded.user, token: state.token }
       });
     }
-    window.location.href = '/tasks'; 
   }, [state.token]);
 
   const login = async (userData) => {
