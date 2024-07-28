@@ -64,7 +64,7 @@ const AuthProvider = ({ children }) => {
         type: 'LOGIN_SUCCESS',
         payload: { user: decoded.user, token }
       });
-      <Navigate to='/tasks' />
+      window.location.href = '/tasks';
     } else if (state.token) {
       setAuthToken(state.token);
       const decoded = decodeJWT(state.token);
