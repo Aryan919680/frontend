@@ -104,7 +104,7 @@ const AuthProvider = ({ children }) => {
       const decoded = decodeJWT(token);
       dispatch({
         type: 'LOGIN_SUCCESS',
-        payload: { user: decoded.user, token }
+        payload: { user: decoded.user, token:token, isAuthenticated:true }
       });
       return true;
     } catch (err) {
