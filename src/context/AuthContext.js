@@ -178,38 +178,40 @@ const decodeJWT = (token) => {
 
 const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
+const googleLogin = ()=>{
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
+  console.log('Received token from URL:', token);
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    console.log('Received token from URL:', token);
+  if (token) {
+    console.log('Setting token in localStorage and auth headers');
+    localStorage.setItem('token', token);
+    setAuthToken(token);
+    const decoded = decodeJWT(token);
+    console.log('Decoded token:', decoded);
+    dispatch({
+      type: 'LOGIN_SUCCESS',
+      payload: { user: decoded.user, token }
+    });
 
-    if (token) {
-      console.log('Setting token in localStorage and auth headers');
-      localStorage.setItem('token', token);
-      setAuthToken(token);
-      const decoded = decodeJWT(token);
-      console.log('Decoded token:', decoded);
-      dispatch({
-        type: 'LOGIN_SUCCESS',
-        payload: { user: decoded.user, token }
-      });
+    // Delay the redirection to ensure the state is updated
+    setTimeout(() => {
+      console.log('Redirecting to /tasks');
+      window.location.href = '/tasks';
+    }, 100);
+  } else if (state.token) {
+    console.log('Using existing token from state');
+    setAuthToken(state.token);
+    const decoded = decodeJWT(state.token);
+    dispatch({
+      type: 'LOGIN_SUCCESS',
+      payload: { user: decoded.user, token: state.token }
+    });
+  }
+}
+  
 
-      // Delay the redirection to ensure the state is updated
-      setTimeout(() => {
-        console.log('Redirecting to /tasks');
-        window.location.href = '/tasks';
-      }, 100);
-    } else if (state.token) {
-      console.log('Using existing token from state');
-      setAuthToken(state.token);
-      const decoded = decodeJWT(state.token);
-      dispatch({
-        type: 'LOGIN_SUCCESS',
-        payload: { user: decoded.user, token: state.token }
-      });
-    }
-  }, [state.token]);
+
 
   const login = async (userData) => {
     try {
@@ -253,7 +255,7 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ ...state, login, register, logout }}>
+    <AuthContext.Provider value={{ ...state, login, register, logout,googleLogin }}>
       {children}
     </AuthContext.Provider>
   );
