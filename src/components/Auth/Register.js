@@ -26,7 +26,9 @@ const Register = () => {
     alert("SignUp Failed")
   }
   };
-
+  const handleGoogleSignUp = () => {
+    window.location.href =  'https://backend-bz7f.onrender.com/auth/google';
+  };
   return (
     <div>
       <Navbar />
@@ -117,7 +119,7 @@ const Register = () => {
                   Login
                 </Link>
               </p>
-              <button
+              <button  onClick={handleGoogleSignUp}
                 type="button"
                 className="w-full py-2 mt-4 text-blue-600 border border-blue-600 rounded hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
