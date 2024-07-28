@@ -65,7 +65,7 @@ const AuthProvider = ({ children }) => {
         payload: { user: decoded.user, token }
       });
       console.log('Redirecting to /tasks');
-      window.location.href = '/tasks'; // Redirect to tasks after setting token
+     // window.location.href = '/tasks'; // Redirect to tasks after setting token
     } else if (state.token) {
       console.log('Using existing token from state');
       setAuthToken(state.token);
