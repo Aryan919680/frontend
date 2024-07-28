@@ -66,16 +66,17 @@ const AuthProvider = ({ children }) => {
       });
       console.log('Redirecting to /tasks');
       window.location.href = '/tasks'; // Redirect to tasks after setting token
-    } else if (state.token) {
-      console.log('Using existing token from state');
-      setAuthToken(state.token);
-      const decoded = decodeJWT(state.token);
-      dispatch({
-        type: 'LOGIN_SUCCESS',
-        payload: { user: decoded.user, token: state.token }
-      });
+    } 
+    //else if (state.token) {
+    //   console.log('Using existing token from state');
+    //   setAuthToken(state.token);
+    //   const decoded = decodeJWT(state.token);
+    //   dispatch({
+    //     type: 'LOGIN_SUCCESS',
+    //     payload: { user: decoded.user, token: state.token }
+    //   });
     }
-  }, [state.token]);
+  , [state.token]);
 
   const login = async (userData) => {
     try {
@@ -104,7 +105,7 @@ const AuthProvider = ({ children }) => {
       const decoded = decodeJWT(token);
       dispatch({
         type: 'LOGIN_SUCCESS',
-        payload: { user: decoded.user, token:token, isAuthenticated:true }
+        payload: { user: decoded.user, token }
       });
       return true;
     } catch (err) {
