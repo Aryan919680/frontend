@@ -1,4 +1,3 @@
-
 import React, { createContext, useReducer, useEffect } from 'react';
 import api, { loginUser, registerUser } from '../utils/api';
 import setAuthToken from '../utils/setAuthToken';
@@ -50,7 +49,18 @@ const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   useEffect(() => {
-    if (state.token) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+
+    if (token) {
+      localStorage.setItem('token', token);
+      setAuthToken(token);
+      const decoded = decodeJWT(token);
+      dispatch({
+        type: 'LOGIN_SUCCESS',
+        payload: { user: decoded.user, token }
+      });
+    } else if (state.token) {
       setAuthToken(state.token);
       const decoded = decodeJWT(state.token);
       dispatch({
@@ -109,3 +119,5 @@ const AuthProvider = ({ children }) => {
 };
 
 export { AuthContext, AuthProvider };
+
+
