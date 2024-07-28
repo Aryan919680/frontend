@@ -64,7 +64,9 @@ const AuthProvider = ({ children }) => {
         type: 'LOGIN_SUCCESS',
         payload: { user: decoded.user, token }
       });
-     // window.location.href = '/tasks';
+      setTimeout(() => {
+        window.location.href = '/tasks';
+      }, 100);
     } else if (state.token) {
       setAuthToken(state.token);
       const decoded = decodeJWT(state.token);
