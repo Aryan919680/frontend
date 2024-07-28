@@ -1,8 +1,7 @@
 import React, { createContext, useReducer, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import api, { loginUser, registerUser } from '../utils/api';
 import setAuthToken from '../utils/setAuthToken';
-import { Navigate } from 'react-router-dom';
+
 const initialState = {
   isAuthenticated: false,
   user: null,
@@ -49,25 +48,26 @@ const decodeJWT = (token) => {
 
 const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
- // const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
-    console.log('token:', token);
+    console.log('Received token from URL:', token);
 
     if (token) {
+      console.log('Setting token in localStorage and auth headers');
       localStorage.setItem('token', token);
       setAuthToken(token);
       const decoded = decodeJWT(token);
+      console.log('Decoded token:', decoded);
       dispatch({
         type: 'LOGIN_SUCCESS',
         payload: { user: decoded.user, token }
       });
-      setTimeout(() => {
-        window.location.href = '/tasks';
-      }, 1000);
+      console.log('Redirecting to /tasks');
+      window.location.href = '/tasks'; // Redirect to tasks after setting token
     } else if (state.token) {
+      console.log('Using existing token from state');
       setAuthToken(state.token);
       const decoded = decodeJWT(state.token);
       dispatch({
@@ -88,7 +88,6 @@ const AuthProvider = ({ children }) => {
         type: 'LOGIN_SUCCESS',
         payload: { user: decoded.user, token }
       });
-    
       return true;
     } catch (err) {
       console.error('Login error', err.response.data);
@@ -117,7 +116,6 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     setAuthToken(null);
     dispatch({ type: 'LOGOUT' });
- 
   };
 
   return (
