@@ -1,7 +1,8 @@
 import React, { createContext, useReducer, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api, { loginUser, registerUser } from '../utils/api';
 import setAuthToken from '../utils/setAuthToken';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 const initialState = {
   isAuthenticated: false,
   user: null,
@@ -32,50 +33,46 @@ const authReducer = (state, action) => {
 };
 
 const decodeJWT = (token) => {
-  if (!token) {
-    return null;
-  }
+  if (!token) return null;
 
   const base64Url = token.split('.')[1];
   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  }).join(''));
+  const jsonPayload = decodeURIComponent(
+    atob(base64)
+      .split('')
+      .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+      .join('')
+  );
 
   return JSON.parse(jsonPayload);
 };
 
 const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
-   let navigate = useNavigate();
+ // const navigate = useNavigate(); // Initialize navigate
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
-    console.log("token:",token)
-    try {
-      if (token) {
-        localStorage.setItem('token', token);
-        setAuthToken(token);
-        const decoded = decodeJWT(token);
-        dispatch({
-          type: 'LOGIN_SUCCESS',
-          payload: { user: decoded.user, token }
-        });
-      
-        navigate('/tasks')
-      } else if (state.token) {
-        setAuthToken(state.token);
-        const decoded = decodeJWT(state.token);
-        dispatch({
-          type: 'LOGIN_SUCCESS',
-          payload: { user: decoded.user, token: state.token }
-        });
-      }
-    } catch (error) {
-      console.log(error)
+    console.log('token:', token);
+
+    if (token) {
+      localStorage.setItem('token', token);
+      setAuthToken(token);
+      const decoded = decodeJWT(token);
+      dispatch({
+        type: 'LOGIN_SUCCESS',
+        payload: { user: decoded.user, token }
+      });
+      <Navigate to='/tasks' />
+    } else if (state.token) {
+      setAuthToken(state.token);
+      const decoded = decodeJWT(state.token);
+      dispatch({
+        type: 'LOGIN_SUCCESS',
+        payload: { user: decoded.user, token: state.token }
+      });
     }
-   
   }, [state.token]);
 
   const login = async (userData) => {
@@ -89,6 +86,7 @@ const AuthProvider = ({ children }) => {
         type: 'LOGIN_SUCCESS',
         payload: { user: decoded.user, token }
       });
+    
       return true;
     } catch (err) {
       console.error('Login error', err.response.data);
@@ -117,6 +115,7 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     setAuthToken(null);
     dispatch({ type: 'LOGOUT' });
+ 
   };
 
   return (
@@ -127,5 +126,3 @@ const AuthProvider = ({ children }) => {
 };
 
 export { AuthContext, AuthProvider };
-
-
