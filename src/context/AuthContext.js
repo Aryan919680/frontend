@@ -47,7 +47,7 @@ const decodeJWT = (token) => {
 
 const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
-  const history = useNavigate();
+   let navigate = useNavigate();
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -63,7 +63,7 @@ const AuthProvider = ({ children }) => {
           payload: { user: decoded.user, token }
         });
       
-        // history('/tasks')
+        navigate('/tasks')
       } else if (state.token) {
         setAuthToken(state.token);
         const decoded = decodeJWT(state.token);
